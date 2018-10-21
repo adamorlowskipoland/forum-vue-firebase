@@ -14,13 +14,15 @@
         {{ post.text }}
       </div>
     </div>
-    <div class="post-date text-faded">
-      {{ post.publishedAt }}
+    <div class="post-date text-faded"
+         :title="post.publishedAt | formatedDate">
+      {{ post.publishedAt | timeFromNow }}
     </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
 import sourceData from '@/data/data.json';
 
 export default {
@@ -37,6 +39,14 @@ export default {
     },
     userPostsCount() {
       return Object.keys(this.user.posts).length;
+    },
+  },
+  filters: {
+    formatedDate(date) {
+      return moment.unix(date).format('MMMM Do YYYY, h:mm:ss a');
+    },
+    timeFromNow(date) {
+      return moment.unix(date).fromNow();
     },
   },
 };
