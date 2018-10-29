@@ -30,12 +30,8 @@
 
 <script>
 import sourceData from '@/data/data.json';
-import AppDate from './AppDate.vue';
 
 export default {
-  components: {
-    AppDate,
-  },
   props: {
     thread: {
       type: Object,

@@ -22,13 +22,9 @@
 
 <script>
 import sourceData from '@/data/data.json';
-import AppDate from './AppDate.vue';
 
 export default {
   name: 'Post',
-  components: {
-    AppDate,
-  },
   props: {
     post: {
       type: Object,
