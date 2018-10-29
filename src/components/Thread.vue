@@ -7,7 +7,7 @@
         </router-link>
       </p>
       <p class="text-faded text-xsmall">
-        By <a href="profile.html">{{ user.name }}</a>, {{ thread.publishedAt }}.
+        By <a href="profile.html">{{ user.name }}</a>, <AppDate :timestamp="thread.publishedAt" />.
       </p>
     </div>
 
@@ -30,8 +30,12 @@
 
 <script>
 import sourceData from '@/data/data.json';
+import AppDate from './AppDate.vue';
 
 export default {
+  components: {
+    AppDate,
+  },
   props: {
     thread: {
       type: Object,

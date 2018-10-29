@@ -14,19 +14,21 @@
         {{ post.text }}
       </div>
     </div>
-    <div class="post-date text-faded"
-         :title="post.publishedAt | formatedDate">
-      {{ post.publishedAt | timeFromNow }}
+    <div class="post-date text-faded">
+      <AppDate :timestamp="post.publishedAt" />
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
 import sourceData from '@/data/data.json';
+import AppDate from './AppDate.vue';
 
 export default {
   name: 'Post',
+  components: {
+    AppDate,
+  },
   props: {
     post: {
       type: Object,
@@ -39,14 +41,6 @@ export default {
     },
     userPostsCount() {
       return Object.keys(this.user.posts).length;
-    },
-  },
-  filters: {
-    formatedDate(date) {
-      return moment.unix(date).format('MMMM Do YYYY, h:mm:ss a');
-    },
-    timeFromNow(date) {
-      return moment.unix(date).fromNow();
     },
   },
 };
