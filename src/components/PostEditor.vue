@@ -31,16 +31,17 @@ export default {
   },
   methods: {
     save() {
-      const postId = `newPost${Math.random()}`;
       const post = {
         text: this.text,
         publishedAt: Math.floor(Date.now() / 1000),
         threadId: this.threadId,
         userId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
-        '.key': postId,
+        '.key': `newPost${Math.random()}`,
       };
       this.text = '';
-      this.$emit('save', { post });
+      //  not needed since adding vuex
+      // this.$emit('save', { post });
+      this.$store.dispatch('createPost', post);
     },
   },
 };

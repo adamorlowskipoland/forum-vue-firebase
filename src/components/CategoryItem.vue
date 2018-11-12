@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import sourceData from '@/data/data.json';
 import ForumList from './ForumList.vue';
 
 export default {
@@ -25,7 +24,7 @@ export default {
   },
   computed: {
     categoryForums() {
-      return Object.values(sourceData.forums)
+      return Object.values(this.$store.state.forums)
         .filter(forum => forum.categoryId === this.category['.key']);
     },
   },

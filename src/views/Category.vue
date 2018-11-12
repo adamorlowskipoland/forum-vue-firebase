@@ -7,9 +7,6 @@
 
 <script>
 import CategoryItem from '@/components/CategoryItem.vue';
-import sourceData from '@/data/data.json';
-
-console.log('%c Line 11 -> ', 'color: #FFFF00 ;', sourceData);
 
 export default {
   name: 'Category',
@@ -22,7 +19,7 @@ export default {
   },
   computed: {
     category() {
-      return sourceData.categories[this.id];
+      return this.$store.state.categories[this.id];
     },
   },
 };

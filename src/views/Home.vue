@@ -1,5 +1,5 @@
 <template>
-  <div class="col-full">
+  <div class="col-full push-top">
     <h1>Welcome to the Forum</h1>
     <CategoryList :categories="categories" />
   </div>
@@ -8,7 +8,6 @@
 <script>
 // @ is an alias to /src
 import CategoryList from '@/components/CategoryList.vue';
-import sourceData from '@/data/data.json';
 
 export default {
   name: 'home',
@@ -18,10 +17,10 @@ export default {
   props: {
     msg: String,
   },
-  data() {
-    return {
-      categories: Object.values(sourceData.categories),
-    };
+  computed: {
+    categories() {
+      return Object.values(this.$store.state.categories);
+    },
   },
 };
 </script>
