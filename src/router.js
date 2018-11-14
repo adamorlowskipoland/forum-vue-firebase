@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import ThreadShow from './views/ThreadShow.vue';
 import Category from './views/Category.vue';
 import Forum from './views/Forum.vue';
+import Profile from './views/Profile.vue';
 import NotFound from './views/NotFound.vue';
 
 Vue.use(Router);
@@ -14,12 +15,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: Home,
     },
     {
       path: '/about',
-      name: 'about',
+      name: 'About',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -42,6 +43,18 @@ export default new Router({
       name: 'Forum',
       component: Forum,
       props: true,
+    },
+    {
+      path: '/me',
+      name: 'Profile',
+      component: Profile,
+      props: true,
+    },
+    {
+      path: '/me/edit',
+      name: 'ProfileEdit',
+      component: Profile,
+      props: { edit: true },
     },
     {
       path: '*',

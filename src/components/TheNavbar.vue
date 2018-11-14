@@ -11,20 +11,34 @@
     <div class="navbar">
       <ul>
         <li class="navbar-user">
-          <a href="#">
-            <img src="../assets/imgs/avatar.jpg" alt="avatar" class="avatar-small">
-            <span>Alex Kyriakidis
+          <router-link :to="{ name: 'Profile' }">
+            <img :src="user.avatar" :alt="user.name" class="avatar-small">
+            <span>{{ user.name }}
               <img src="../assets/imgs/avatar.jpg" alt="arrow right" class="icon-profile">
             </span>
-          </a>
+          </router-link>
+          <div id="user-dropdown">
+            <div class="triangle-drop">
+              <ul class="dropdown-menu">
+                <li class="dropdown-menu-item">View profile</li>
+                <li class="dropdown-menu-item">Log out</li>
+              </ul>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
   </header>
 </template>
-
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'TheNavbar',
+  computed: {
+    ...mapGetters({
+      user: 'authUser',
+    }),
+  },
 };
 </script>
