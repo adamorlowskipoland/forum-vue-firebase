@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import ThreadShow from './views/ThreadShow.vue';
+import ThreadEdit from './views/ThreadEdit.vue';
+import ThreadCreate from './views/ThreadCreate.vue';
 import Category from './views/Category.vue';
 import Forum from './views/Forum.vue';
 import Profile from './views/Profile.vue';
@@ -27,9 +29,21 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
     {
+      path: '/thread/create/:forumId',
+      name: 'ThreadCreate',
+      component: ThreadCreate,
+      props: true,
+    },
+    {
       path: '/thread/:id',
       name: 'ThreadShow',
       component: ThreadShow,
+      props: true,
+    },
+    {
+      path: '/thread/:id/edit',
+      name: 'ThreadEdit',
+      component: ThreadEdit,
       props: true,
     },
     {

@@ -3,7 +3,7 @@
     <h1 :class="$style.headingLarge">Page Not Found</h1>
     <p :class="$style.textLarge">
       Oops, we couldn't find what you are looking for. Go to
-      <router-link :to="{name: 'home'}">
+      <router-link :to="{name: 'Home'}">
         Home page
       </router-link>
     </p>
