@@ -27,7 +27,29 @@ export default {
     },
     post: {
       type: Object,
+      validator: (validatedProp) => {
+        const keyIsValid = typeof validatedProp['.key'] === 'string';
+        const textIsValid = typeof validatedProp.text === 'string';
+        if (!keyIsValid) {
+          // eslint-disable-next-line
+          console.warn('Prop `post` must include `key` attributes');
+        }
+        if (!textIsValid) {
+          // eslint-disable-next-line
+          console.warn('Prop `post` must include `text` attributes');
+        }
+        return keyIsValid && textIsValid;
+      },
     },
+    //  example validators
+    // age: {
+    //   type: Number,
+    //   validator: value => value > 0,
+    // },
+    // cheeseOrHam: {
+    //   type: String,
+    //   validator: value => ['cheese', 'ham'].includes(value),
+    // },
   },
   data() {
     return {
