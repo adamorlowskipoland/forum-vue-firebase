@@ -10,8 +10,23 @@
       <p class="desktop-only text-small">{{ userPostsCount }} posts</p>
     </div>
     <div class="post-content">
-      <div>
-        {{ post.text }}
+      <template v-if="!editing">
+        <div>
+          {{ post.text }}
+        </div>
+        <a v-if="!editing"
+           @click.prevent="editing = true"
+           href="#"
+           style="margin-left: auto;"
+           class="link-unstyled"
+           title="Make a change">
+          <i class="fa fa-pencil"></i>
+        </a>
+      </template>
+      <div v-else>
+        <PostEditor :post="post"
+                    @save="editing = false"
+                    @cancel="editing = false" />
       </div>
     </div>
     <div class="post-date text-faded">
@@ -22,14 +37,21 @@
 
 <script>
 import { countObjectProperties } from '@/utilities/index';
+import PostEditor from '@/components/PostEditor.vue';
 
 export default {
   name: 'Post',
+  components: { PostEditor },
   props: {
     post: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      editing: false,
+    };
   },
   computed: {
     user() {

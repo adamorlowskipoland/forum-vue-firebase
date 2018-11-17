@@ -9,7 +9,10 @@
                   v-model="text"></textarea>
     </div>
     <div class="form-actions">
-      <button class="btn-blue">Submit post</button>
+      <button v-if="isUpdate"
+              @click.prevent="cancel"
+              class="btn btn-ghost">Cancel</button>
+      <button class="btn-blue">{{ isUpdate ? 'Update' : 'Submit post' }}</button>
     </div>
   </form>
 </template>
@@ -20,29 +23,54 @@ export default {
   props: {
     threadId: {
       type: String,
-      required: true,
+      required: false,
+    },
+    post: {
+      type: Object,
     },
   },
   data() {
     return {
-      text: '',
-
+      text: this.post ? this.post.text : '',
     };
+  },
+  computed: {
+    isUpdate() {
+      return !!this.post;
+    },
   },
   methods: {
     save() {
+      //  first parentease call condition and method, alwayse return a promise,
+      // is the same as using commented method persist below.
+      // like that: this.persist().then(post => ...
+      (this.isUpdate ? this.update() : this.create())
+        .then(post => this.$emit('save', { post }));
+    },
+    cancel() {
+      this.$emit('cancel');
+    },
+    create() {
       const post = {
         text: this.text,
         publishedAt: Math.floor(Date.now() / 1000),
         threadId: this.threadId,
-        // userId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
-        // '.key': `newPost${Math.random()}`,
       };
       this.text = '';
       //  not needed since adding vuex
       // this.$emit('save', { post });
-      this.$store.dispatch('createPost', post);
+      return this.$store.dispatch('createPost', post);
     },
+    update() {
+      const payload = {
+        id: this.post['.key'],
+        text: this.text,
+      };
+      return this.$store.dispatch('updatePost', payload);
+    },
+    // persist() {
+    //   return this.isUpdate ? this.update() : this.create();
+    // },
   },
 };
 </script>
