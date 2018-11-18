@@ -42,13 +42,13 @@ export default {
       type: Object,
       required: true,
     },
-    userPostsCount: {
-      type: Number,
-      required: true,
+  },
+  computed: {
+    userPostsCount() {
+      return this.$store.getters.userPostsCount(this.user['.key']);
     },
-    userThreadsCount: {
-      type: Number,
-      reqired: true,
+    userThreadsCount() {
+      return this.$store.getters.userThreadsCount(this.user['.key']);
     },
   },
 };

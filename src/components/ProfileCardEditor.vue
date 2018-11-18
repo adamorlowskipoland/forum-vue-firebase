@@ -80,19 +80,19 @@ export default {
       type: Object,
       required: true,
     },
-    userPostsCount: {
-      type: Number,
-      required: true,
-    },
-    userThreadsCount: {
-      type: Number,
-      reqired: true,
-    },
   },
   data() {
     return {
       activeUser: { ...this.user },
     };
+  },
+  computed: {
+    userPostsCount() {
+      return this.$store.getters.userPostsCount(this.user['.key']);
+    },
+    userThreadsCount() {
+      return this.$store.getters.userThreadsCount(this.user['.key']);
+    },
   },
   methods: {
     save() {
