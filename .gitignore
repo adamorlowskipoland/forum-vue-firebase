@@ -20,4 +20,4 @@ yarn-error.log*
 *.sln
 *.sw*
 
-scs/main.js
+/src/main.js
