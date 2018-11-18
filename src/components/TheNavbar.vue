@@ -14,7 +14,7 @@
           <router-link :to="{ name: 'Profile' }">
             <img :src="user.avatar" :alt="user.name" class="avatar-small">
             <span>{{ user.name }}
-              <img src="../assets/imgs/avatar.jpg" alt="arrow right" class="icon-profile">
+              <i class="fa fa-caret-down"></i>
             </span>
           </router-link>
           <div id="user-dropdown">
