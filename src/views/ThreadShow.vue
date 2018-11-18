@@ -10,9 +10,14 @@
     </h1>
     <p>
       By <a href="#"
-            class="link-unstyled">Robin</a>, <AppDate :timestamp="thread.publishedAt" />.
+            class="link-unstyled">{{ user.name }}</a>, <AppDate :timestamp="thread.publishedAt" />.
       <span style="float: right; margin-top: 2px"
-            class="hide-mobile text-faded text-small">3 replies by 3 contributors</span>
+            class="hide-mobile text-faded text-small">
+        {{ repliesCount }}
+        {{ repliesCount === 1 ? 'reply' : 'replies' }}
+        by
+        {{ contributorsCount }} {{ contributorsCount === 1 ? 'contributor' : 'contributors' }}
+      </span>
     </p>
     <PostList :posts="posts"/>
     <PostEditor :threadId="id" />
@@ -40,6 +45,24 @@ export default {
     posts() {
       const postIds = Object.values(this.thread.posts);
       return Object.values(this.$store.state.posts).filter(post => postIds.includes(post['.key']));
+    },
+    user() {
+      return this.$store.state.users[this.thread.userId];
+    },
+    repliesCount() {
+      return this.$store.getters.threadRepliesCount(this.thread['.key']);
+    },
+    contributorsCount() {
+      //  find the replies
+      const replies = Object.keys(this.thread.posts)
+        .filter(postId => postId !== this.thread.firstPostId)
+        .map(postId => this.$store.state.posts[postId]);
+      //  get the useer ids
+      const userIds = replies.map(post => post.userId);
+      //  count the unique ids (we need to make sure users id is not counted 2 or more times)
+      return userIds.filter((userId, index) => userIds.indexOf(userId) === index).length;
+      //  the same can be achieve using Set()
+      // return new Set(userIds).size;
     },
   },
 };

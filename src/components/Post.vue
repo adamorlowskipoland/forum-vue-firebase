@@ -7,7 +7,12 @@
              alt="User's avatar"
              class="avatar-large">
       </a>
-      <p class="desktop-only text-small">{{ userPostsCount }} posts</p>
+      <p class="desktop-only text-small">
+        {{ userThreadsCount }} {{ userThreadsCount === 1 ? 'thread' : 'threads' }}
+      </p>
+      <p class="desktop-only text-small">
+        {{ userPostsCount }} {{ userPostsCount === 1 ? 'post' : 'posts' }}
+      </p>
     </div>
     <div class="post-content">
       <template v-if="!editing">
@@ -62,6 +67,9 @@ export default {
     },
     userPostsCount() {
       return this.$store.getters.userPostsCount(this.post.userId);
+    },
+    userThreadsCount() {
+      return this.$store.getters.userThreadsCount(this.post.userId);
     },
   },
 };
