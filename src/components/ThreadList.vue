@@ -2,7 +2,7 @@
   <div class="thread-list">
     <h2 class="list-title">Threads</h2>
     <Thread v-for="thread in threads"
-            :thread="thread" :key="thread['.key']" />
+            :thread="thread" :key="thread.dotkey" />
   </div>
 </template>
 

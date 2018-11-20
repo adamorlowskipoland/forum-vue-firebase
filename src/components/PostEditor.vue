@@ -28,7 +28,7 @@ export default {
     post: {
       type: Object,
       validator: (validatedProp) => {
-        const keyIsValid = typeof validatedProp['.key'] === 'string';
+        const keyIsValid = typeof validatedProp.dotkey === 'string';
         const textIsValid = typeof validatedProp.text === 'string';
         if (!keyIsValid) {
           // eslint-disable-next-line

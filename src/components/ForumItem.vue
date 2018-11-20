@@ -1,7 +1,7 @@
 <template>
   <div class="forum-listing">
     <div class="forum-details">
-      <router-link :to="{name: 'Forum', params: {id: forum['.key']}}"
+      <router-link :to="{name: 'Forum', params: {id: forum.dotkey}}"
                    class="text-xlarge">
         {{ forum.name }}
       </router-link>

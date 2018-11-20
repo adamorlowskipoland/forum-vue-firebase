@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import firebase from 'firebase';
 import { countObjectProperties } from '@/utilities';
 
 Vue.use(Vuex);
@@ -23,7 +24,7 @@ export default new Vuex.Store({
     authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3',
   },
   getters: {
-    authUser(state) {
+    authUser() {
       // return state.users[state.authId];
       return {};
     },
@@ -41,6 +42,10 @@ export default new Vuex.Store({
     setUser(state, { user, userId }) {
       Vue.set(state.users, userId, user);
     },
+    setItem(state, { item, id, resource }) {
+      const newItem = { ...item, dotkey: id };
+      Vue.set(state[resource], id, newItem);
+    },
     appendPostToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'posts' }),
     appendPostToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'posts' }),
     appendThreadToForum: makeAppendChildToParentMutation({ parent: 'forums', child: 'threads' }),
@@ -51,10 +56,10 @@ export default new Vuex.Store({
       const post = {
         ...basicPost,
         userId: context.state.authId,
-        '.key': `newPost${Math.random()}`,
+        dotkey: `newPost${Math.random()}`,
         publishedAt: Math.floor(Date.now() / 1000),
       };
-      const { '.key': postId } = post;
+      const { dotkey: postId } = post;
       context.commit('setPost', { post, postId });
       context.commit('appendPostToThread', { childId: postId, parentId: post.threadId });
       context.commit('appendPostToUser', { childId: postId, parentId: post.userId });
@@ -66,7 +71,7 @@ export default new Vuex.Store({
         const userId = state.authId;
         const publishedAt = Math.floor(Date.now() / 1000);
         const thread = {
-          '.key': threadId,
+          dotkey: threadId,
           title,
           forumId,
           publishedAt,
@@ -77,7 +82,7 @@ export default new Vuex.Store({
         commit('appendThreadToUser', { parentId: userId, childId: threadId });
         dispatch('createPost', { text, threadId })
           .then((post) => {
-            commit('setThread', { threadId, thread: { ...thread, firstPostId: post['.key'] } });
+            commit('setThread', { threadId, thread: { ...thread, firstPostId: post.dotkey } });
           });
         resolve(state.threads[threadId]);
       });
@@ -92,7 +97,7 @@ export default new Vuex.Store({
       });
     },
     updateUser({ commit }, user) {
-      commit('setUser', { userId: user['.key'], user });
+      commit('setUser', { userId: user.dotkey, user });
     },
     updatePost({ state, commit }, { id, text }) {
       return new Promise((resolve) => {
@@ -110,6 +115,29 @@ export default new Vuex.Store({
         });
         resolve(post);
       });
+    },
+    fetchThread({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'threads', id });
+    },
+    fetchUser({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'users', id });
+    },
+    fetchPost({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'posts', id });
+    },
+    fetchPosts({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { ids, resource: 'posts' });
+    },
+    fetchItem({ state, commit }, { id, resource }) {
+      return new Promise((resolve) => {
+        firebase.database().ref(resource).child(id).once('value', (snapshot) => {
+          commit('setItem', { resource, id: snapshot.key, item: snapshot.val() });
+          resolve(state[resource][id]);
+        });
+      });
+    },
+    fetchItems({ dispatch }, { ids, resource }) {
+      return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource })));
     },
   },
 });

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Category v-for="category in categories"
-              :key="category['.key']"
+              :key="category.dotkey"
               :category="category" />
   </div>
 </template>

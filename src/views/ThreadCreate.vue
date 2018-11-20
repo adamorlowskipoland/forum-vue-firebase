@@ -25,16 +25,16 @@ export default {
   methods: {
     save({ title, text }) {
       this.$store.dispatch('createThread', {
-        forumId: this.forum['.key'],
+        forumId: this.forum.dotkey,
         title,
         text,
       })
         .then((thread) => {
-          this.$router.push({ name: 'ThreadShow', params: { id: thread['.key'] } });
+          this.$router.push({ name: 'ThreadShow', params: { id: thread.dotkey } });
         });
     },
     cancel() {
-      this.$router.push({ name: 'Forum', params: { id: this.forum['.key'] } });
+      this.$router.push({ name: 'Forum', params: { id: this.forum.dotkey } });
     },
   },
 };

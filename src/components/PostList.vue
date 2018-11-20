@@ -2,7 +2,7 @@
   <div class="post-list">
     <Post v-for="post in posts"
           :post="post"
-          :key="post['.key']" />
+          :key="post.dotkey" />
   </div>
 </template>
 
