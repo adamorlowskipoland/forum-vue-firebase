@@ -1,5 +1,5 @@
 <template>
-  <header class="header" id="header">
+  <header v-if="user" class="header" id="header">
     <router-link :to="{ name: 'Home' }" class="logo">
       <img src="https://vueschool.io/img/logo/vueschool_logo_multicolor_negative.svg" alt="logo">
     </router-link>

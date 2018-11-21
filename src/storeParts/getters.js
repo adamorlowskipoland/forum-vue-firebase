@@ -1,9 +1,9 @@
 import { countObjectProperties } from '@/utilities';
 
 export default {
-  authUser() {
-    // return state.users[state.authId];
-    return {};
+  authUser(state) {
+    return state.users[state.authId];
+    // return {};
   },
   userPostsCount: state => id => countObjectProperties(state.users[id].posts),
   userThreadsCount: state => id => countObjectProperties(state.users[id].threads),
