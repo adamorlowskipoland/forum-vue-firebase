@@ -85,7 +85,7 @@ export default {
     },
     update() {
       const payload = {
-        id: this.post['.key'],
+        id: this.post.dotkey,
         text: this.text,
       };
       return this.$store.dispatch('updatePost', payload);

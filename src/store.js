@@ -119,14 +119,29 @@ export default new Vuex.Store({
     fetchThread({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'threads', id });
     },
+    fetchThreads({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { ids, resource: 'threads' });
+    },
+    fetchCategories({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { ids, resource: 'categories' });
+    },
     fetchUser({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'users', id });
+    },
+    fetchForum({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'forums', id });
     },
     fetchPost({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'posts', id });
     },
+    fetchCategory({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'categories', id });
+    },
     fetchPosts({ dispatch }, { ids }) {
       return dispatch('fetchItems', { ids, resource: 'posts' });
+    },
+    fetchForums({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { ids, resource: 'forums' });
     },
     fetchItem({ state, commit }, { id, resource }) {
       return new Promise((resolve) => {
@@ -137,7 +152,20 @@ export default new Vuex.Store({
       });
     },
     fetchItems({ dispatch }, { ids, resource }) {
-      return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource })));
+      const idsArr = Array.isArray(ids) ? ids : Object.keys(ids);
+      return Promise.all(idsArr.map(id => dispatch('fetchItem', { id, resource })));
+    },
+    fetchAllCategories({ state, commit }) {
+      return new Promise((resolve) => {
+        firebase.database().ref('categories').once('value', (snapshot) => {
+          const categoriesObject = snapshot.val();
+          Object.keys(categoriesObject).forEach((categoryId) => {
+            const category = categoriesObject[categoryId];
+            commit('setItem', { resource: 'categories', id: categoryId, item: category });
+          });
+          resolve(Object.values(state.categories));
+        });
+      });
     },
   },
 });

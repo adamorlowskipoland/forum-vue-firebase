@@ -1,5 +1,6 @@
 <template>
-  <div class="forum-wrapper">
+  <div v-if="forum"
+       class="forum-wrapper">
     <div class="col-full push-top">
       <div class="forum-header">
         <div class="forum-details">
@@ -29,6 +30,17 @@ export default {
       type: String,
       required: true,
     },
+  },
+  created() {
+    this.$store.dispatch('fetchForum', { id: this.id })
+      .then((forum) => {
+        this.$store.dispatch('fetchThreads', { ids: forum.threads })
+          .then((threads) => {
+            threads.forEach((thread) => {
+              this.$store.dispatch('fetchUser', { id: thread.userId });
+            });
+          });
+      });
   },
   computed: {
     forum() {

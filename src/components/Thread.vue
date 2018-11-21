@@ -1,5 +1,6 @@
 <template>
-  <div class="thread">
+  <div v-if="thread && user"
+       class="thread">
     <div>
       <p>
         <router-link :to="{name: 'ThreadShow', params: {id: thread.dotkey}}">
@@ -38,7 +39,7 @@ export default {
   },
   computed: {
     repliesCount() {
-      return this.$store.getters.threadRepliesCount(this.thread['.key']);
+      return this.$store.getters.threadRepliesCount(this.thread.dotkey);
     },
     user() {
       return this.$store.state.users[this.thread.userId];
