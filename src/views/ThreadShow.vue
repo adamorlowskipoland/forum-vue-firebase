@@ -24,6 +24,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
 import { countObjectProperties } from '@/utilities/index';
@@ -57,14 +58,17 @@ export default {
       return countObjectProperties(this.thread.contributors);
     },
   },
+  methods: {
+    ...mapActions(['fetchThread', 'fetchUser', 'fetchPosts']),
+  },
   created() {
-    this.$store.dispatch('fetchThread', { id: this.id })
+    this.fetchThread({ id: this.id })
       .then((thread) => {
-        this.$store.dispatch('fetchUser', { id: thread.userId });
-        this.$store.dispatch('fetchPosts', { ids: Object.keys(thread.posts) })
+        this.fetchUser({ id: thread.userId });
+        this.fetchPosts({ ids: Object.keys(thread.posts) })
           .then((posts) => {
             posts.forEach((post) => {
-              this.$store.dispatch('fetchUser', { id: post.userId });
+              this.fetchUser({ id: post.userId });
             });
           });
       });

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import CategoryItem from '@/components/CategoryItem.vue';
 
 export default {
@@ -19,15 +20,18 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('fetchCategory', { id: this.id })
+    this.fetchCategory({ id: this.id })
       .then((category) => {
-        this.$store.dispatch('fetchForums', { ids: category.forums });
+        this.fetchForums({ ids: category.forums });
       });
   },
   computed: {
     category() {
       return this.$store.state.categories[this.id];
     },
+  },
+  methods: {
+    ...mapActions(['fetchCategory', 'fetchForums']),
   },
 };
 </script>

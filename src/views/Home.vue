@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 // @ is an alias to /src
 import CategoryList from '@/components/CategoryList.vue';
 
@@ -17,11 +18,11 @@ export default {
   props: {
     msg: String,
   },
-  beforeCreate() {
-    this.$store.dispatch('fetchAllCategories')
+  created() {
+    this.fetchAllCategories()
       .then((categories) => {
         categories.forEach((category) => {
-          this.$store.dispatch('fetchForums', { ids: Object.keys(category.forums) });
+          this.fetchForums({ ids: Object.keys(category.forums) });
         });
       });
   },
@@ -29,6 +30,9 @@ export default {
     categories() {
       return Object.values(this.$store.state.categories);
     },
+  },
+  methods: {
+    ...mapActions(['fetchAllCategories', 'fetchForums']),
   },
 };
 </script>

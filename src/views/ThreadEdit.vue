@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import ThreadEditor from '@/components/ThreadEditor.vue';
 
 export default {
@@ -24,9 +25,9 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('fetchThread', { id: this.id })
+    this.fetchThread({ id: this.id })
       .then((thread) => {
-        this.$store.dispatch('fetchPost', { id: thread.firstPostId });
+        this.fetchPost({ id: thread.firstPostId });
       });
   },
   computed: {
@@ -39,8 +40,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['fetchThread', 'fetchPost', 'updateThread']),
     save({ title, text }) {
-      this.$store.dispatch('updateThread', {
+      this.updateThread({
         id: this.id,
         title,
         text,
