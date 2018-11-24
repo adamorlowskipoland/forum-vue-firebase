@@ -5,35 +5,66 @@ export default {
     const post = {
       ...basicPost,
       userId: state.authId,
-      dotkey: `newPost${Math.random()}`,
+      dotkey: firebase.database().ref('posts').push().key,
       publishedAt: Math.floor(Date.now() / 1000),
     };
     const { dotkey: postId } = post;
-    commit('setPost', { post, postId });
-    commit('appendPostToThread', { childId: postId, parentId: post.threadId });
-    commit('appendPostToUser', { childId: postId, parentId: post.userId });
-    return Promise.resolve(state.posts[postId]);
+
+    const updates = {};
+    updates[`posts/${postId}`] = post;
+    updates[`threads/${post.threadId}/posts/${postId}`] = postId;
+    updates[`threads/${post.threadId}/contributors/${post.userId}`] = post.userId;
+    updates[`users/${post.userId}/posts/${postId}`] = postId;
+    firebase.database().ref().update(updates)
+      .then(() => {
+        commit('setItem', { resource: 'posts', item: post, id: postId });
+        commit('appendPostToThread', { childId: postId, parentId: post.threadId });
+        commit('appendContributorToThread', { childId: post.userId, parentId: post.threadId });
+        commit('appendPostToUser', { childId: postId, parentId: post.userId });
+        return Promise.resolve(state.posts[postId]);
+      });
   },
-  createThread({ state, commit, dispatch }, { text, title, forumId }) {
+  createThread({ state, commit }, { text, title, forumId }) {
     return new Promise((resolve) => {
-      const threadId = `newThread${Math.random()}`;
+      const threadId = firebase.database().ref('threads').push().key;
+      const postId = firebase.database().ref('postss').push().key;
       const userId = state.authId;
       const publishedAt = Math.floor(Date.now() / 1000);
       const thread = {
-        dotkey: threadId,
         title,
         forumId,
         publishedAt,
         userId,
+        firstPostId: postId,
+        posts: {},
       };
-      commit('setThread', { threadId, thread });
-      commit('appendThreadToForum', { parentId: forumId, childId: threadId });
-      commit('appendThreadToUser', { parentId: userId, childId: threadId });
-      dispatch('createPost', { text, threadId })
-        .then((post) => {
-          commit('setThread', { threadId, thread: { ...thread, firstPostId: post.dotkey } });
+      thread.posts[postId] = postId;
+      const post = {
+        text,
+        publishedAt,
+        threadId,
+        userId,
+      };
+      const updates = {};
+      updates[`threads/${threadId}`] = thread;
+      updates[`forums/${forumId}/threads/${threadId}`] = threadId;
+      updates[`users/${userId}/threads/${threadId}`] = threadId;
+
+      updates[`posts/${postId}`] = post;
+      updates[`users/${userId}/posts/${postId}`] = postId;
+      firebase.database().ref().update(updates)
+        .then(() => {
+          //  update thread
+          commit('setItem', { resource: 'threads', id: threadId, item: thread });
+          commit('appendThreadToForum', { parentId: forumId, childId: threadId });
+          commit('appendThreadToUser', { parentId: userId, childId: threadId });
+          //  update post
+          commit('setItem', { resource: 'posts', item: post, id: postId });
+          commit('appendPostToThread', { childId: postId, parentId: post.threadId });
+          commit('appendPostToUser', { childId: postId, parentId: post.userId });
+
+          resolve(state.threads[threadId]);
         });
-      resolve(state.threads[threadId]);
     });
   },
   updateThread({ state, commit, dispatch }, { title, text, id }) {
@@ -51,18 +82,16 @@ export default {
   updatePost({ state, commit }, { id, text }) {
     return new Promise((resolve) => {
       const post = state.posts[id];
-      commit('setPost', {
-        postId: id,
-        post: {
-          ...post,
-          text,
-          edited: {
-            at: Math.floor(Date.now() / 1000),
-            by: state.authId,
-          },
-        },
-      });
-      resolve(post);
+      const edited = {
+        at: Math.floor(Date.now() / 1000),
+        by: state.authId,
+      };
+      const updates = { text, edited };
+      firebase.database().ref('posts').child(id).update(updates)
+        .then(() => {
+          commit('setPost', { postId: id, post: { ...post, text, edited } });
+          resolve(post);
+        });
     });
   },
   fetchThread: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'threads', id }),
