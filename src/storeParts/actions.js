@@ -67,13 +67,24 @@ export default {
         });
     });
   },
-  updateThread({ state, commit, dispatch }, { title, text, id }) {
+  updateThread({ state, commit }, { title, text, id }) {
     return new Promise((resolve) => {
       const thread = state.threads[id];
-      const updatedThread = { ...thread, title };
-      commit('setThread', { thread: updatedThread, threadId: id });
-      dispatch('updatePost', { id: thread.firstPostId, text })
-        .then(() => resolve(updatedThread));
+      const post = state.posts[thread.firstPostId];
+      const edited = {
+        at: Math.floor(Date.now() / 1000),
+        by: state.authId,
+      };
+      const updates = { text, edited };
+      updates[`posts/${thread.firstPostId}/text`] = text;
+      updates[`posts/${thread.firstPostId}/edited`] = edited;
+      updates[`threads/${id}/title`] = title;
+      firebase.database().ref().update(updates)
+        .then(() => {
+          commit('setThread', { thread: { ...thread, title }, threadId: id });
+          commit('setPost', { postId: thread.firstPostId, post: { ...post, text, edited } });
+          resolve(post);
+        });
     });
   },
   updateUser({ commit }, user) {
