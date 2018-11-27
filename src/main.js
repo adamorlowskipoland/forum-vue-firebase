@@ -6,12 +6,12 @@ import router from './router';
 import store from './store';
 
 const config = {
-  apiKey: 'yourAppApiKey',
-  authDomain: 'yourAuthDomain',
-  databaseURL: 'yourDatabaseURL',
-  projectId: 'yourProjectId',
-  storageBucket: 'yourStorageBucket',
-  messagingSenderId: 'yourSenderId',
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASEURL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECTID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGEBUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
 };
 firebase.initializeApp(config);
 
