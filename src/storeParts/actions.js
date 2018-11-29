@@ -67,6 +67,42 @@ export default {
         });
     });
   },
+  createUser({ state, commit }, {
+    id, email, name, username, avatar = null,
+  }) {
+    return new Promise((resolve) => {
+      const registeredAt = Math.floor((Date.now() / 1000));
+      const usernameLower = username.toLowerCase();
+      const emailLower = email.toLowerCase();
+      const user = {
+        avatar, email: emailLower, name, username, usernameLower, registeredAt,
+      };
+      firebase.database().ref('users').child(id).set(user)
+        .then(() => {
+          commit('setItem', { resource: 'users', id, item: user });
+          resolve(state.users[id]);
+        });
+    });
+  },
+  registerUserWithEmailAndPassword({ dispatch }, {
+    email,
+    password,
+    name,
+    username,
+    avatar = null,
+  }) {
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        dispatch('createUser', {
+          id: user.uid,
+          email,
+          name,
+          username,
+          password,
+          avatar,
+        });
+      });
+  },
   updateThread({ state, commit }, { title, text, id }) {
     return new Promise((resolve) => {
       const thread = state.threads[id];
@@ -89,6 +125,13 @@ export default {
   },
   updateUser({ commit }, user) {
     commit('setUser', { userId: user.dotkey, user });
+  },
+  fetchAuthUser({ dispatch, commit }) {
+    const userId = firebase.auth().currentUser.uid;
+    return dispatch('fetchUser', { id: userId })
+      .then(() => {
+        commit('setAuthId', userId);
+      });
   },
   updatePost({ state, commit }, { id, text }) {
     return new Promise((resolve) => {

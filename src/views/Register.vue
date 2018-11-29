@@ -59,7 +59,10 @@ export default {
   },
   methods: {
     register() {
-      console.log('%c Line 62 -> ', 'color: #FFFF00 ;', this.form);
+      this.$store.dispatch('registerUserWithEmailAndPassword', this.form)
+        .then(() => {
+          this.$router.push('/');
+        });
     },
   },
   created() {
