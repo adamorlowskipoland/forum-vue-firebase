@@ -8,6 +8,7 @@ import Category from './views/Category.vue';
 import Forum from './views/Forum.vue';
 import Profile from './views/Profile.vue';
 import Register from './views/Register.vue';
+import SignIn from './views/SignIn.vue';
 import NotFound from './views/NotFound.vue';
 
 Vue.use(Router);
@@ -75,6 +76,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register,
+    },
+    {
+      path: '/signin',
+      name: 'SignIn',
+      component: SignIn,
     },
     {
       path: '*',

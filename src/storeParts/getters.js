@@ -2,7 +2,7 @@ import { countObjectProperties } from '@/utilities';
 
 export default {
   authUser(state) {
-    return state.users[state.authId];
+    return state.authId ? state.users[state.authId] : null;
     // return {};
   },
   userPostsCount: state => id => countObjectProperties(state.users[id].posts),

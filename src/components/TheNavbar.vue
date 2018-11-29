@@ -1,5 +1,5 @@
 <template>
-  <header v-if="user" class="header" id="header">
+  <header class="header" id="header">
     <router-link :to="{ name: 'Home' }" class="logo">
       <img src="https://vueschool.io/img/logo/vueschool_logo_multicolor_negative.svg" alt="logo">
     </router-link>
@@ -9,7 +9,7 @@
       <div class="bottom bar"></div>
     </div>
     <div class="navbar">
-      <ul>
+      <ul v-if="user">
         <li class="navbar-user">
           <router-link :to="{ name: 'Profile' }">
             <img :src="user.avatar" :alt="user.name" class="avatar-small">
@@ -25,6 +25,17 @@
               </ul>
             </div>
           </div>
+        </li>
+        <li class="navbar-item">
+          <a @click.prevent="$store.dispatch('signOut')">Sign Out</a>
+        </li>
+      </ul>
+      <ul v-else>
+        <li class="navbar-item">
+          <router-link :to="{name: 'SignIn'}">Sign In</router-link>
+        </li>
+        <li class="navbar-item">
+          <router-link :to="{name: 'Register'}">Register</router-link>
         </li>
       </ul>
     </div>
