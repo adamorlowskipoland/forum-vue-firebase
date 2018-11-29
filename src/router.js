@@ -7,6 +7,7 @@ import ThreadCreate from './views/ThreadCreate.vue';
 import Category from './views/Category.vue';
 import Forum from './views/Forum.vue';
 import Profile from './views/Profile.vue';
+import Register from './views/Register.vue';
 import NotFound from './views/NotFound.vue';
 
 Vue.use(Router);
@@ -69,6 +70,11 @@ export default new Router({
       name: 'ProfileEdit',
       component: Profile,
       props: { edit: true },
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register,
     },
     {
       path: '*',
