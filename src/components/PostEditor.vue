@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'PostEditor',
   props: {
@@ -62,6 +64,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('posts', ['createPost', 'updatePost']),
     save() {
       //  first parentease call condition and method, alwayse return a promise,
       // is the same as using commented method persist below.
@@ -81,14 +84,14 @@ export default {
       this.text = '';
       //  not needed since adding vuex
       // this.$emit('save', { post });
-      return this.$store.dispatch('createPost', post);
+      return this.createPost(post);
     },
     update() {
       const payload = {
         id: this.post.dotkey,
         text: this.text,
       };
-      return this.$store.dispatch('updatePost', payload);
+      return this.updatePost(payload);
     },
     // persist() {
     //   return this.isUpdate ? this.update() : this.create();
@@ -96,7 +99,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-</style>

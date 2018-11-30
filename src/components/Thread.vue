@@ -39,10 +39,10 @@ export default {
   },
   computed: {
     repliesCount() {
-      return this.$store.getters.threadRepliesCount(this.thread.dotkey);
+      return this.$store.getters['threads/threadRepliesCount'](this.thread.dotkey);
     },
     user() {
-      return this.$store.state.users[this.thread.userId];
+      return this.$store.state.users.items[this.thread.userId];
     },
   },
 };

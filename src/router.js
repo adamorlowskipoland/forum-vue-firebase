@@ -122,7 +122,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  store.dispatch('initAuthentication')
+  store.dispatch('auth/initAuthentication')
     .then((user) => {
       //  to.matched.some checkes also nested routes if any of them has requiresAuth property
       if (to.matched.some(route => route.meta.requiresAuth)) {

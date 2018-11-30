@@ -33,15 +33,15 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('fetchPosts', { ids: this.user.posts })
+    this.$store.dispatch('posts/fetchPosts', { ids: this.user.posts })
       .then(() => this.asyncDataStatus_fetched());
   },
   computed: {
     ...mapGetters({
-      user: 'authUser',
+      user: 'auth/authUser',
     }),
     userPosts() {
-      return this.$store.getters.userPosts(this.user.dotkey);
+      return this.$store.getters['users/userPosts'](this.user.dotkey);
     },
   },
   mixins: [asyncDataStatus],

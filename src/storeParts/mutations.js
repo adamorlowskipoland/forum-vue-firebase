@@ -1,39 +1,8 @@
 import Vue from 'vue';
 
-const makeAppendChildToParentMutation = ({ parent, child }) =>
-  (state, { childId, parentId }) => {
-    const resource = state[parent][parentId];
-    if (!resource[child]) {
-      Vue.set(resource, child, {});
-    }
-    Vue.set(resource[child], childId, childId);
-  };
-
 export default {
-  setPost(state, { post, postId }) {
-    Vue.set(state.posts, postId, post);
-  },
-  setThread(state, { thread, threadId }) {
-    Vue.set(state.threads, threadId, thread);
-  },
-  setUser(state, { user, userId }) {
-    Vue.set(state.users, userId, user);
-  },
   setItem(state, { item, id, resource }) {
     const newItem = { ...item, dotkey: id };
-    Vue.set(state[resource], id, newItem);
+    Vue.set(state[resource].items, id, newItem);
   },
-  setAuthId(state, id) {
-    // eslint-disable-next-line
-    state.authId = id;
-  },
-  setUnsubscibeAuthObserver(state, unsubscribe) {
-    // eslint-disable-next-line
-    state.unsubscribeAuthObserver = unsubscribe;
-  },
-  appendPostToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'posts' }),
-  appendContributorToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'contributors' }),
-  appendPostToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'posts' }),
-  appendThreadToForum: makeAppendChildToParentMutation({ parent: 'forums', child: 'threads' }),
-  appendThreadToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'threads' }),
 };

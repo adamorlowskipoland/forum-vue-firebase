@@ -45,10 +45,10 @@ export default {
   },
   computed: {
     userPostsCount() {
-      return this.$store.getters.userPostsCount(this.user.dotkey);
+      return this.$store.getters['users/userPostsCount'](this.user.dotkey);
     },
     userThreadsCount() {
-      return this.$store.getters.userThreadsCount(this.user.dotkey);
+      return this.$store.getters['users/userThreadsCount'](this.user.dotkey);
     },
   },
 };

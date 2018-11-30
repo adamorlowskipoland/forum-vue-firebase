@@ -51,27 +51,30 @@ export default {
   },
   computed: {
     ...mapGetters({
-      authUser: 'authUser',
+      authUser: 'auth/authUser',
     }),
     thread() {
-      return this.$store.state.threads[this.id];
+      return this.$store.state.threads.items[this.id];
     },
     posts() {
       const postIds = Object.values(this.thread.posts);
-      return Object.values(this.$store.state.posts).filter(post => postIds.includes(post.dotkey));
+      return Object.values(this.$store.state.posts.items)
+        .filter(post => postIds.includes(post.dotkey));
     },
     user() {
-      return this.$store.state.users[this.thread.userId];
+      return this.$store.state.users.items[this.thread.userId];
     },
     repliesCount() {
-      return this.$store.getters.threadRepliesCount(this.thread.dotkey);
+      return this.$store.getters['threads/threadRepliesCount'](this.thread.dotkey);
     },
     contributorsCount() {
       return countObjectProperties(this.thread.contributors);
     },
   },
   methods: {
-    ...mapActions(['fetchThread', 'fetchUser', 'fetchPosts']),
+    ...mapActions('threads', ['fetchThread']),
+    ...mapActions('users', ['fetchUser']),
+    ...mapActions('posts', ['fetchPosts']),
   },
   mixins: [asyncDataStatus],
   created() {
