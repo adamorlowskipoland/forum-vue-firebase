@@ -14,6 +14,7 @@ export default new Vuex.Store({
     posts: {},
     users: {},
     authId: null,
+    unsubscribeAuthObserver: null,
   },
   getters,
   mutations,

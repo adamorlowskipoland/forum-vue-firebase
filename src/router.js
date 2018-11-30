@@ -104,18 +104,20 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log('%c Line 111 -> ', 'color: #FFFF00 ;', `👉 navigating to ${to.name} from ${from.name}`);
-  //  to.matched.some checkes also nested routes if any of them has requiresAuth property
-  if (to.matched.some(route => route.meta.requiresAuth)) {
-  //  protect route
-    if (store.state.authId) {
-      next();
-    } else {
-      next({ name: 'Home' });
-    }
-  } else {
-    next();
-  }
+  store.dispatch('initAuthentication')
+    .then((user) => {
+      //  to.matched.some checkes also nested routes if any of them has requiresAuth property
+      if (to.matched.some(route => route.meta.requiresAuth)) {
+        //  protect route
+        if (user) {
+          next();
+        } else {
+          next({ name: 'Home' });
+        }
+      } else {
+        next();
+      }
+    });
 });
 
 export default router;

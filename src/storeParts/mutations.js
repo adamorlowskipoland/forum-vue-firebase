@@ -27,6 +27,10 @@ export default {
     // eslint-disable-next-line
     state.authId = id;
   },
+  setUnsubscibeAuthObserver(state, unsubscribe) {
+    // eslint-disable-next-line
+    state.unsubscribeAuthObserver = unsubscribe;
+  },
   appendPostToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'posts' }),
   appendContributorToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'contributors' }),
   appendPostToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'posts' }),
