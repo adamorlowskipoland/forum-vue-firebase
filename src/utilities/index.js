@@ -5,5 +5,15 @@ const countObjectProperties = (obj) => {
   return 0;
 };
 
+const removeEmptyProperties = (obj) => {
+  const objCopy = { ...obj };
+  Object.keys(objCopy).forEach((key) => {
+    if (!objCopy[key]) {
+      delete objCopy[key];
+    }
+  });
+  return objCopy;
+};
+
 // eslint-disable-next-line
-export { countObjectProperties };
+export { countObjectProperties, removeEmptyProperties };
