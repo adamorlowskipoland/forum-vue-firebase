@@ -2,7 +2,7 @@
   <form @submit.prevent="save">
     <div class="form-group">
       <label for="thread_title">Title:</label>
-      <input v-model="forum.title"
+      <input v-model="form.title"
              id="thread_title"
              type="text"
              class="form-input"
@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
       <label for="thread_content">content:</label>
-      <textarea v-model="forum.text"
+      <textarea v-model="form.text"
                 id="thread_content"
                 class="form-input"
                 name="content"
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      forum: {
+      form: {
         title: this.title,
         text: this.text,
       },
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     save() {
-      this.$emit('save', { title: this.forum.title, text: this.forum.text });
+      this.$emit('save', { title: this.form.title, text: this.form.text });
     },
     cancel() {
       this.$emit('cancel');

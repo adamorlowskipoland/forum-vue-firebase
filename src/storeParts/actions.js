@@ -101,7 +101,8 @@ export default {
           password,
           avatar,
         });
-      });
+      })
+      .then(() => dispatch('fetchAuthUser'));
   },
   signInWithEmailAndPassword(context, { email, password }) {
     return firebase.auth().signInWithEmailAndPassword(email, password);
@@ -110,6 +111,25 @@ export default {
     return firebase.auth().signOut()
       .then(() => {
         commit('setAuthId', null);
+      });
+  },
+  signInWithGoogle({ dispatch }) {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return firebase.auth().signInWithPopup(provider)
+      .then(({ user }) => {
+        firebase.database().ref('users').child(user.uid).once('value', (snapshot) => {
+          if (!snapshot.exists()) {
+            return dispatch('createUser', {
+              id: user.uid,
+              name: user.displayName,
+              email: user.email,
+              username: user.email,
+              avatar: user.photoURL,
+            })
+              .then(() => dispatch('fetchAuthUser'));
+          }
+          return false;
+        });
       });
   },
   updateThread({ state, commit }, { title, text, id }) {
@@ -137,10 +157,19 @@ export default {
   },
   fetchAuthUser({ dispatch, commit }) {
     const userId = firebase.auth().currentUser.uid;
-    return dispatch('fetchUser', { id: userId })
-      .then(() => {
-        commit('setAuthId', userId);
+    return new Promise((resolve) => {
+      // eslint-disable-next-line
+      firebase.database().ref('users').child(userId).once('value', (snapshot) => {
+        if (snapshot.exists()) {
+          return dispatch('fetchUser', { id: userId })
+            .then((user) => {
+              commit('setAuthId', userId);
+              resolve(user);
+            });
+        }
+        resolve(null);
       });
+    });
   },
   updatePost({ state, commit }, { id, text }) {
     return new Promise((resolve) => {

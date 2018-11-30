@@ -3,6 +3,7 @@
        class="col-full push-top">
     <h1>Editing <i>{{ thread.title }}</i></h1>
     <ThreadEditor
+      ref="editor"
       :title="thread.title"
       :text="text"
       @save="save"
@@ -30,6 +31,20 @@ export default {
       .then(thread => this.fetchPost({ id: thread.firstPostId }))
       .then(() => { this.asyncDataStatus_fetched(); });
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.hasUnsavedChanges) {
+      // eslint-disable-next-line
+      const confirmed = window.confirm('Are you sure you want to leave? Unsaved changes will be lost');
+      if (confirmed) {
+        next();
+      } else {
+        //  aborting route change
+        next(false);
+      }
+    } else {
+      next();
+    }
+  },
   computed: {
     thread() {
       return this.$store.state.threads[this.id];
@@ -37,6 +52,10 @@ export default {
     text() {
       const post = this.$store.state.posts[this.thread.firstPostId];
       return post ? post.text : null;
+    },
+    hasUnsavedChanges() {
+      return (this.$refs.editor.form.title !== this.thread.title)
+        || (this.$refs.editor.form.text !== this.text);
     },
   },
   methods: {

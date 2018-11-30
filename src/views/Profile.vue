@@ -21,6 +21,7 @@ import { mapGetters } from 'vuex';
 import ProfileCard from '@/components/ProfileCard.vue';
 import ProfileCardEditor from '@/components/ProfileCardEditor.vue';
 import PostList from '@/components/PostList.vue';
+import store from '@/store';
 
 export default {
   name: 'Profile',
@@ -43,5 +44,20 @@ export default {
       return [];
     },
   },
+  beforeRouteEnter(to, from, next) {
+    if (store.state.authId) {
+      next();
+    } else {
+      next({ name: 'Home' });
+    }
+  },
 };
 </script>
+
+<!--  middlewere hooks
+beforeRouteEnter(to, from, next) {}
+beforeRouteUpdate(to, from, next) {
+  this one fires when navigating from one route to the other which renders the same component
+}
+beforeRouteLeave(to, from, next) {}
+-->

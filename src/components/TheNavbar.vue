@@ -11,23 +11,24 @@
     <div class="navbar">
       <ul v-if="user">
         <li class="navbar-user">
-          <router-link :to="{ name: 'Profile' }">
+          <a @click.prevent="userDropdownOpen = !userDropdownOpen">
             <img :src="user.avatar" :alt="user.name" class="avatar-small">
             <span>{{ user.name }}
               <i class="fa fa-caret-down"></i>
             </span>
-          </router-link>
-          <div id="user-dropdown">
+          </a>
+          <div id="user-dropdown" :class="{'active-drop': userDropdownOpen}">
             <div class="triangle-drop">
               <ul class="dropdown-menu">
-                <li class="dropdown-menu-item">View profile</li>
-                <li class="dropdown-menu-item">Log out</li>
+                <li class="dropdown-menu-item">
+                  <router-link :to="{ name: 'Profile' }">View profile</router-link>
+                </li>
+                <li class="dropdown-menu-item">
+                  <a @click.prevent="$store.dispatch('signOut')">Sign Out</a>
+                </li>
               </ul>
             </div>
           </div>
-        </li>
-        <li class="navbar-item">
-          <a @click.prevent="$store.dispatch('signOut')">Sign Out</a>
         </li>
       </ul>
       <ul v-else>
@@ -50,6 +51,11 @@ export default {
     ...mapGetters({
       user: 'authUser',
     }),
+  },
+  data() {
+    return {
+      userDropdownOpen: false,
+    };
   },
 };
 </script>
