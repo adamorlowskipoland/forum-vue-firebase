@@ -130,7 +130,7 @@ router.beforeEach((to, from, next) => {
         if (user) {
           next();
         } else {
-          next({ name: 'SignIn' });
+          next({ name: 'SignIn', query: { redirectTo: to.path } });
         }
       } else if (to.matched.some(route => route.meta.requiresGuest)) {
         //  protect route
