@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '@/store';
 import Home from './views/Home.vue';
 import ThreadShow from './views/ThreadShow.vue';
 import ThreadEdit from './views/ThreadEdit.vue';
@@ -65,6 +66,13 @@ export default new Router({
       name: 'Profile',
       component: Profile,
       props: true,
+      beforeEnter(to, from, next) {
+        if (store.state.authId) {
+          next();
+        } else {
+          next({ name: 'Home' });
+        }
+      },
     },
     {
       path: '/me/edit',
@@ -81,6 +89,14 @@ export default new Router({
       path: '/signin',
       name: 'SignIn',
       component: SignIn,
+    },
+    {
+      path: '/logout',
+      name: 'SignOut',
+      beforeEnter(to, from, next) {
+        store.dispatch('signOut')
+          .then(() => next({ name: 'Home' }));
+      },
     },
     {
       path: '*',

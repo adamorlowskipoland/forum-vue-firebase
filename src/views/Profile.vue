@@ -21,7 +21,6 @@ import { mapGetters } from 'vuex';
 import ProfileCard from '@/components/ProfileCard.vue';
 import ProfileCardEditor from '@/components/ProfileCardEditor.vue';
 import PostList from '@/components/PostList.vue';
-import store from '@/store';
 
 export default {
   name: 'Profile',
@@ -43,13 +42,6 @@ export default {
       }
       return [];
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    if (store.state.authId) {
-      next();
-    } else {
-      next({ name: 'Home' });
-    }
   },
 };
 </script>
