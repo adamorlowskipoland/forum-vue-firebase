@@ -14,7 +14,7 @@ import NotFound from './views/NotFound.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -66,12 +66,8 @@ export default new Router({
       name: 'Profile',
       component: Profile,
       props: true,
-      beforeEnter(to, from, next) {
-        if (store.state.authId) {
-          next();
-        } else {
-          next({ name: 'Home' });
-        }
+      meta: {
+        requiresAuth: true,
       },
     },
     {
@@ -106,3 +102,20 @@ export default new Router({
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  console.log('%c Line 111 -> ', 'color: #FFFF00 ;', `👉 navigating to ${to.name} from ${from.name}`);
+  //  to.matched.some checkes also nested routes if any of them has requiresAuth property
+  if (to.matched.some(route => route.meta.requiresAuth)) {
+  //  protect route
+    if (store.state.authId) {
+      next();
+    } else {
+      next({ name: 'Home' });
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;
