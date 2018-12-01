@@ -19,5 +19,3 @@ yarn run build
 ```
 yarn run lint
 ```
-
-    "firebase": "^5.5.8", switched to -> firebase": "^4.12.1
