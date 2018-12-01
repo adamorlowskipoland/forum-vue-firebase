@@ -59,13 +59,21 @@
 
         <div class="form-group">
           <label for="avatar">Avatar</label>
-          <input v-model="form.avatar" @blur="$v.form.avatar.$touch()"
+          <input v-model.lazy="form.avatar" @blur="$v.form.avatar.$touch()"
                  id="avatar"
                  type="text"
                  class="form-input">
           <template v-if="$v.form.avatar.$error">
-            <span v-if="!$v.form.avatar.required"
-                  class="form-error">This field is required</span>
+            <span v-if="!$v.form.avatar.url"
+                  class="form-error">The supplied URL is invalid</span>
+            <span v-if="!$v.form.avatar.supportedImageFile"
+                  class="form-error">
+              We support file types in this range: 'jpg', 'jpeg', 'gif', 'png', 'svg'
+            </span>
+            <span v-if="!$v.form.avatar.imageOk"
+                  class="form-error">
+              Suplied image can not be found
+            </span>
           </template>
         </div>
 
@@ -83,7 +91,7 @@
   </div>
 </template>
 <script>
-import { required, email, minLength, helpers as vuelidateHelpers } from 'vuelidate/lib/validators';
+import { required, email, minLength, helpers as vuelidateHelpers, url } from 'vuelidate/lib/validators';
 import firebase from 'firebase';
 
 export default {
@@ -135,7 +143,27 @@ export default {
         required,
         minLength: minLength(6),
       },
-      avatar: {},
+      avatar: {
+        url,
+        supportedImageFile(value) {
+          if (!vuelidateHelpers.req(value)) {
+            return true;
+          }
+          const supported = ['jpg', 'jpeg', 'gif', 'png', 'svg'];
+          const suffix = value.split('.').pop();
+          return supported.includes(suffix);
+        },
+        imageOk(value) {
+          if (!vuelidateHelpers.req(value)) {
+            return true;
+          }
+          return new Promise((resolve) => {
+            fetch(value)
+              .then(response => resolve(response.ok))
+              .catch(() => resolve(false));
+          });
+        },
+      },
     },
   },
   methods: {
