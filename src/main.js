@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import firebase from 'firebase';
+import vuelidate from 'vuelidate';
 import AppDate from '@/components/AppDate.vue';
 import App from './App.vue';
 import router from './router';
@@ -14,6 +15,8 @@ const config = {
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
 };
 firebase.initializeApp(config);
+
+Vue.use(vuelidate);
 
 // registering global component
 Vue.component('AppDate', AppDate);
