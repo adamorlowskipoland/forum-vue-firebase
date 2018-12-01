@@ -10,8 +10,8 @@
     </div>
     <div class="navbar">
       <ul v-if="user">
-        <li class="navbar-user">
-          <a @click.prevent="userDropdownOpen = !userDropdownOpen">
+        <li class="navbar-user" v-click-outside="toggleMenuDropdown">
+          <a @click.prevent="toggleMenuDropdown">
             <img :src="user.avatar" :alt="user.name" class="avatar-small">
             <span>{{ user.name }}
               <i class="fa fa-caret-down"></i>
@@ -44,9 +44,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import clickOutside from '@/directives/click-outside';
 
 export default {
   name: 'TheNavbar',
+  directives: { clickOutside },
   computed: {
     ...mapGetters({
       user: 'auth/authUser',
@@ -56,6 +58,11 @@ export default {
     return {
       userDropdownOpen: false,
     };
+  },
+  methods: {
+    toggleMenuDropdown() {
+      this.userDropdownOpen = !this.userDropdownOpen;
+    },
   },
 };
 </script>
